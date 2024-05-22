@@ -3,6 +3,7 @@ import random
 from animal import Predator, Prey
 from environment import Water, Grass
 
+print("Hello")
 pygame.init()
 clock = pygame.time.Clock()
 # Ustawienia planszy
