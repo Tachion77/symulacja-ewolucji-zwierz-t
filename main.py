@@ -2,7 +2,8 @@ import pygame
 import random
 from animal import Predator, Prey
 from environment import Water, Grass
-
+print("Welcome to the symulacja")
+print("")
 pygame.init()
 clock = pygame.time.Clock()
 # Ustawienia planszy
