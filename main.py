@@ -13,7 +13,7 @@ xGridSize = width // gridSize
 yGridSize = height // gridSize
 # ilość zwierząt i terenów
 predatorsNumber = random.randint(10, 20)
-preysNumber = random.randint(20, 70)
+preysNumber = random.randint(100, 150)
 terrainNumberWater = random.randint(30, 50)
 terrainNumberGrass = random.randint(100, 150)
 
@@ -129,12 +129,13 @@ while running:
 
         # rysowanie i funkcje predatora
         predatortargets = {}
-
+        #
         for predator in predators:
             if predator.hunger == 0 or predator.hydration == 0:
                 predators.remove(predator)
-                continue
-
+                continue      
+            predator.reproduce(predators)      
+            #
             if predator in predatortargets and predatortargets[predator] in prey:
                 prey_target = predatortargets[predator]
 
@@ -146,8 +147,7 @@ while running:
                         prey.remove(prey_target)
                         predatortargets.pop(predator)
                     continue
-
-
+            #
             for prey in preys:
                 if (abs(predator.x - prey.x) < predator.vision and
                         abs(predator.y - prey.y) < predator.vision):
@@ -160,8 +160,7 @@ while running:
                     else:
                         predatortargets[predator] = prey
                         break
-
-
+            #
             if predator not in predatortargets or predatortargets[predator] not in preys:
                 if not predator.seek_energy(terrainsGrass, terrainsWater):
                     predator.move_randomly(xGridSize, yGridSize, occupiedWater)
@@ -177,6 +176,7 @@ while running:
             if not prey.seek_energy(terrainsGrass,  terrainsWater):
                 prey.move_randomly(xGridSize, yGridSize, occupiedWater)
             prey.draw(map, gridSize, (0, 255, 0))
+            prey.reproduce(preys)
 
     clock.tick(5)
     pygame.display.flip()

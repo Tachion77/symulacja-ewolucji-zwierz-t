@@ -98,6 +98,10 @@ class Animal:
                 self.hunger -= 30
                 self.hydration -= 30
                 self.reproduction_cooldown = 10
+    # odnawianie czasu do reprodukcji
+    def cooldown(self):
+        if self.reproduction_cooldown > 0:
+            self.reproduction_cooldown -= 1
     # odnowienie czasu reprodukcji
     def cooldown(self):
             if self.reproduction_cooldown > 0:
@@ -163,14 +167,19 @@ class Animal:
 
 # klasa tworząca ofiarę
 class Prey(Animal):
+    # inicjalizacja ofiary
     def __init__(self, x, y, speed, hunger, hydration, vision,):
         super().__init__(x, y, speed, hunger, hydration, vision)
+    # reprodukcja
+    def reproduce(self, animals_list):
+        super().reproduce(animals_list)
 
 # klasa tworząca drapieżnika
 class Predator(Animal):
+    # inicjalizacja drapieżnika
     def __init__(self, x, y, speed, hunger, hydration, vision):
         super().__init__(x, y, speed, hunger, hydration, vision)
-
+    # podążanie za ofiarą
     def follow(self, prey_x, prey_y, terrains):
 
         if self.x < prey_x:
@@ -200,3 +209,6 @@ class Predator(Animal):
                 if not self.is_position_blocked(self.x, next_y, terrains):
                     self.y = next_y
                     break
+    # reprodukcja
+    def reproduce(self, animals_list):
+        super().reproduce(animals_list)
