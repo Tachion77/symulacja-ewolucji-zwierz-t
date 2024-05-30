@@ -83,7 +83,7 @@ class Animal:
     # zyskiwanie nawodnienia
     def gain_hydration(self):
         self.hydration += 50
-        self.hydration = max(0, min(self.hydration, self.MAX_HYDRATION))
+        self.hydration = max(0, min(self.hydration, self.MAX_HYDRATION)) #
 
     # zyskiwanie głodu
     def gain_hunger(self):

@@ -109,7 +109,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:
+            if event.button == 1:#
                 mouse_x, mouse_y = event.pos
                 if paused:
                     print_animal_attributes(predators + preys, mouse_x, mouse_y)
