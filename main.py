@@ -2,7 +2,7 @@ import pygame
 import random
 from animal import Predator, Prey
 from environment import Water, Grass
-
+#test1
 pygame.init()
 clock = pygame.time.Clock()
 # Ustawienia planszy
@@ -44,11 +44,12 @@ for water in terrainsWater:
 terrainsGrass = []
 for grass in range(terrainNumberGrass):
     while True:
+        sizegrass = random.randint(1,4)
         x = random.randint(0, xGridSize - 1)
         y = random.randint(0, yGridSize - 1)
         if (x, y) not in occupiedWater:
             break
-    terrainsGrass.append(Grass(x,y))
+    terrainsGrass.append(Grass(x,y,size))
 
 # tworzenie setu okupowanych lokacji przez trawę
 occupiedGrass = set()
@@ -116,6 +117,7 @@ while running:
             if event.key == pygame.K_SPACE:
                 pause_resume_simulation()
 
+
     if not paused: #pętla umożliwiająca pauzowanie symulacji
         map.fill((0, 0, 0))
 
@@ -133,8 +135,8 @@ while running:
         for predator in predators:
             if predator.hunger == 0 or predator.hydration == 0:
                 predators.remove(predator)
-                continue      
-            predator.reproduce(predators)      
+                continue
+            predator.reproduce(predators)
             #
             if predator in predatortargets and predatortargets[predator] in prey:
                 prey_target = predatortargets[predator]

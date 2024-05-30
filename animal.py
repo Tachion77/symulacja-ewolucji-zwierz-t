@@ -145,23 +145,12 @@ class Animal:
                     food_list.remove(closest_item)
                     return True
             elif closest_item in terrainsWater:
-                adjacent_water = [
-                    (self.x - 1, self.y),
-                    (self.x + 1, self.y),
-                    (self.x, self.y - 1),
-                    (self.x, self.y + 1),
-                    (self.x - 1, self.y - 1),
-                    (self.x - 1, self.y + 1),
-                    (self.x + 1, self.y - 1),
-                    (self.x + 1, self.y + 1)
-                ]
                 self.move_towards(closest_item.x, closest_item.y, terrainsWater)
-                for water in adjacent_water:
-                    if water in terrainsWater:
-                        self.x, self.y = water
-                        self.gain_hydration()
-                        break
-                        return True
+                distance = math.sqrt((self.x - closest_item.x) ** 2 + (self.y - closest_item.y) ** 2)
+                if distance<=1:
+                    self.gain_hydration()
+                    return True
+
 
             return False
 
