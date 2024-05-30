@@ -5,8 +5,8 @@ import math
 # klasa główna zwierząt
 class Animal:
 
-    MAX_HUNGER = 100
-    MAX_HYDRATION = 100
+    MAX_HUNGER = 400
+    MAX_HYDRATION = 400
 
     # inicjalizacja zwierzęcia
     def __init__(self, x, y, speed, hunger, hydration, vision):
@@ -82,17 +82,17 @@ class Animal:
 
     # zyskiwanie nawodnienia
     def gain_hydration(self):
-        self.hydration += 50
+        self.hydration += 350
         self.hydration = max(0, min(self.hydration, self.MAX_HYDRATION))
 
     # zyskiwanie głodu
     def gain_hunger(self):
-        self.hunger += 50
+        self.hunger += 350
         self.hunger = max(0, min(self.hunger, self.MAX_HUNGER))
 
     # reprodukcja zwierząt
     def reproduce(self, animals_list):
-            if self.hunger > 50 and self.hydration > 50 and self.reproduction_cooldown == 0:
+            if self.hunger > 200 and self.hydration > 200 and self.reproduction_cooldown == 0:
                 new_animal = type(self)(self.x, self.y, self.speed, random.randint(50, 100), random.randint(50, 100), self.vision)
                 animals_list.append(new_animal)
                 self.hunger -= 30
@@ -102,10 +102,6 @@ class Animal:
     def cooldown(self):
         if self.reproduction_cooldown > 0:
             self.reproduction_cooldown -= 1
-    # odnowienie czasu reprodukcji
-    def cooldown(self):
-            if self.reproduction_cooldown > 0:
-                self.reproduction_cooldown -= 1
 
     # sprawdzanie czy pozycja jest zablokowana
     def is_position_blocked(self, x, y, terrains):
@@ -113,8 +109,8 @@ class Animal:
             if (x, y) in terrain.occupiedCoordinates:
                 return True
         return False
-
-    # funkcja wymuszająca poruszanie się w kierunku terenów w celu uzyskania pożywienia lub wody
+    
+    # seek_energy
     def seek_energy(self, food_list, terrainsWater):
         closest_item = None
         min_distance = float('inf')
@@ -145,24 +141,12 @@ class Animal:
                     food_list.remove(closest_item)
                     return True
             elif closest_item in terrainsWater:
-                adjacent_water = [
-                    (self.x - 1, self.y),
-                    (self.x + 1, self.y),
-                    (self.x, self.y - 1),
-                    (self.x, self.y + 1),
-                    (self.x - 1, self.y - 1),
-                    (self.x - 1, self.y + 1),
-                    (self.x + 1, self.y - 1),
-                    (self.x + 1, self.y + 1)
-                ]
                 self.move_towards(closest_item.x, closest_item.y, terrainsWater)
-                for water in adjacent_water:
-                    if water in terrainsWater:
-                        self.x, self.y = water
-                        self.gain_hydration()
-                        break
-                        return True
-
+                distance = math.sqrt((self.x - closest_item.x) ** 2 + (self.y - closest_item.y) ** 2)
+                if distance<=1:
+                    self.gain_hydration()
+                    return True
+                
             return False
 
 # klasa tworząca ofiarę

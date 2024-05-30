@@ -64,8 +64,8 @@ for _ in range(predatorsNumber):
         if not any((x, y) in terrain.occupiedCoordinates for terrain in terrainsWater):
             break
     speed = 3
-    hunger = random.randint(0, 100)
-    hydration = random.randint(0, 100)
+    hunger = random.randint(0, 400)
+    hydration = random.randint(0, 40)
     vision = 7
     predators.append(Predator(x, y, speed, hunger, hydration, vision))
 
@@ -77,8 +77,8 @@ for _ in range(preysNumber):
         if not any((x, y) in terrain.occupiedCoordinates for terrain in terrainsWater):
             break
     speed = 1
-    hunger = random.randint(90, 300)
-    hydration = random.randint(0, 39)
+    hunger = random.randint(0, 400)
+    hydration = random.randint(0, 40)
     vision = 8
     preys.append(Prey(x, y, speed, hunger, hydration, vision))
 def pause_resume_simulation():
@@ -108,13 +108,14 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:
+            if event.button == 1:#
                 mouse_x, mouse_y = event.pos
                 if paused:
                     print_animal_attributes(predators + preys, mouse_x, mouse_y)
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 pause_resume_simulation()
+
 
     if not paused: #pętla umożliwiająca pauzowanie symulacji
         map.fill((0, 0, 0))
@@ -133,8 +134,8 @@ while running:
         for predator in predators:
             if predator.hunger == 0 or predator.hydration == 0:
                 predators.remove(predator)
-                continue      
-            predator.reproduce(predators)      
+                continue
+            predator.reproduce(predators)
             #
             if predator in predatortargets and predatortargets[predator] in prey:
                 prey_target = predatortargets[predator]
@@ -178,7 +179,7 @@ while running:
             prey.draw(map, gridSize, (0, 255, 0))
             prey.reproduce(preys)
 
-    clock.tick(5)
+    clock.tick(2)
     pygame.display.flip()
 
 pygame.quit()
