@@ -182,7 +182,7 @@ class Simulation:
                 if not predator.seek_water( self.terrainsWater):
                     predator.move_randomly(self.xGridSize, self.yGridSize, self.occupiedWater)
             predator.cooldown()
-            predator.draw(self.map, self.gridSize, (255, 0, 0))
+            predator.draw(self.map, self.gridSize)
 
         # Aktualizacja ofiar
         for prey in self.preys:
@@ -192,7 +192,7 @@ class Simulation:
             prey.flee_from_predator(self.predators, self.terrainsWater, self.xGridSize,self.yGridSize)
             if not prey.seek_energy(self.terrainsGrass, self.terrainsWater):
                 prey.move_randomly(self.xGridSize, self.yGridSize, self.occupiedWater)
-            prey.draw(self.map, self.gridSize, (0, 255, 0))
+            prey.draw(self.map, self.gridSize)
             prey.cooldown()
 
     def run(self):
