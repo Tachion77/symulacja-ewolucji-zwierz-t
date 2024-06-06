@@ -3,22 +3,19 @@ import random
 from animal import Predator, Prey
 from environment import Water, Grass
 
-
 class Simulation:
     def __init__(self):
         pygame.init()
         self.clock = pygame.time.Clock()
 
-        # Ustawienia planszy
         self.width = 1000
         self.height = 1000
         self.gridSize = 10
         self.xGridSize = self.width // self.gridSize
         self.yGridSize = self.height // self.gridSize
 
-        # Ilość zwierząt i terenów
-        self.predatorsNumber = random.randint(10, 20)
-        self.preysNumber = random.randint(100, 150)
+        self.predatorsNumber = random.randint(10, 15)
+        self.preysNumber = random.randint(10, 15)
         self.terrainNumberWater = random.randint(30, 50)
         self.terrainNumberGrass = random.randint(100, 150)
 
@@ -36,7 +33,19 @@ class Simulation:
 
         self.predators = self.create_predators()
         self.preys = self.create_preys()
-    # tworyz wodę
+
+        
+        self.background = pygame.Surface((self.width, self.height))
+        self.create_green_background()
+        #Funkcja rysujaca plansze na rozne odcienie zielonego
+    def create_green_background(self):
+        for x in range(self.width):
+            for y in range(self.height):
+                green_value = random.randint(50, 150)
+                color = (0, green_value, 0)
+                self.background.set_at((x, y), color)
+
+
     def create_water_terrains(self):
         terrainsWater = []
         for _ in range(self.terrainNumberWater):
@@ -45,7 +54,7 @@ class Simulation:
             size = random.randint(1, 4)
             terrainsWater.append(Water(x, y, size))
         return terrainsWater
-    # tworzy trawę
+
     def create_grass_terrains(self):
         terrainsGrass = []
         for _ in range(self.terrainNumberGrass):
@@ -56,13 +65,13 @@ class Simulation:
                     break
             terrainsGrass.append(Grass(x, y))
         return terrainsGrass
-    # zwraca okupowane tereny
+
     def get_occupied_coordinates(self, terrains):
         occupied = set()
         for terrain in terrains:
             occupied.update(terrain.occupiedCoordinates)
         return occupied
-    # tworzy drapieżniki
+
     def create_predators(self):
         predators = []
         for _ in range(self.predatorsNumber):
@@ -77,7 +86,7 @@ class Simulation:
             vision = 7
             predators.append(Predator(x, y, speed, hunger, hydration, vision))
         return predators
-    # tworzy ofiary
+
     def create_preys(self):
         preys = []
         for _ in range(self.preysNumber):
@@ -130,7 +139,8 @@ class Simulation:
                     self.pause_resume_simulation()
 
     def update_simulation(self):
-        self.map.fill((0, 0, 0))
+        # Blit the background with varying shades of green
+        self.map.blit(self.background, (0, 0))
 
         # Rysowanie wody
         for water in self.terrainsWater:
@@ -169,7 +179,7 @@ class Simulation:
                         predatortargets[predator] = prey
                         break
             if predator not in predatortargets or predatortargets[predator] not in self.preys:
-                if not predator.seek_energy(self.terrainsGrass, self.terrainsWater):
+                if not predator.seek_water( self.terrainsWater):
                     predator.move_randomly(self.xGridSize, self.yGridSize, self.occupiedWater)
             predator.cooldown()
             predator.draw(self.map, self.gridSize)
@@ -179,16 +189,17 @@ class Simulation:
             if prey.hunger == 0 or prey.hydration == 0:
                 self.preys.remove(prey)
             prey.reproduce(self.preys)
+            prey.flee_from_predator(self.predators, self.terrainsWater, self.xGridSize,self.yGridSize)
             if not prey.seek_energy(self.terrainsGrass, self.terrainsWater):
                 prey.move_randomly(self.xGridSize, self.yGridSize, self.occupiedWater)
             prey.draw(self.map, self.gridSize)
-            prey.reproduce(self.preys)
+            prey.cooldown()
 
     def run(self):
         while self.running:
             self.handle_events()
             if not self.paused:
                 self.update_simulation()
-            self.clock.tick(5)
+            self.clock.tick(9)
             pygame.display.flip()
         pygame.quit()
