@@ -35,7 +35,7 @@ class Animal:
         vision_height = self.vision * 2 + 1
         top_left_x = (self.x - self.vision) * grid_size
         top_left_y = (self.y - self.vision) * grid_size
-        pygame.draw.circle(surface, (255, 0, 0), center, self.vision * grid_size, 2)
+        #pygame.draw.circle(surface, (255, 0, 0), center, self.vision * grid_size, 2)
 
     # poruszanie się zwierzęcia w losowym kierunku
     #metoda zwracajaca wspolrzedne zwierzecia
