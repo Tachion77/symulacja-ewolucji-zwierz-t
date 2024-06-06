@@ -2,23 +2,19 @@ import pygame
 import random
 from animal import Predator, Prey
 from environment import Water, Grass
-
-
 class Simulation:
     def __init__(self):
         pygame.init()
         self.clock = pygame.time.Clock()
 
-        # Ustawienia planszy
         self.width = 1000
         self.height = 1000
         self.gridSize = 10
         self.xGridSize = self.width // self.gridSize
         self.yGridSize = self.height // self.gridSize
 
-        # Ilość zwierząt i terenów
-        self.predatorsNumber = random.randint(10, 20)
-        self.preysNumber = random.randint(100, 150)
+        self.predatorsNumber = random.randint(10, 30)
+        self.preysNumber = random.randint(10, 30)
         self.terrainNumberWater = random.randint(30, 50)
         self.terrainNumberGrass = random.randint(100, 150)
 
@@ -179,10 +175,11 @@ class Simulation:
             if prey.hunger == 0 or prey.hydration == 0:
                 self.preys.remove(prey)
             prey.reproduce(self.preys)
+            prey.flee_from_predator(self.predators, self.terrainsWater, self.xGridSize,self.yGridSize)
             if not prey.seek_energy(self.terrainsGrass, self.terrainsWater):
                 prey.move_randomly(self.xGridSize, self.yGridSize, self.occupiedWater)
             prey.draw(self.map, self.gridSize, (0, 255, 0))
-            prey.reproduce(self.preys)
+            prey.cooldown()
 
     def run(self):
         while self.running:
