@@ -19,7 +19,8 @@ class Animal:
         self.reproduction_cooldown = 10
 
     # rysowanie zwierzęca
-    def draw(self, surface, grid_size, color):
+    def draw(self, surface, grid_size):
+        color = (255,255,255)
         radius = grid_size // 2
         center = (self.x * grid_size + radius, self.y * grid_size + radius)
         pygame.draw.circle(surface, color, center, radius)
@@ -124,7 +125,24 @@ class Prey(Animal):
     # inicjalizacja ofiary
     def __init__(self, x, y, speed, hunger, hydration, vision, ):
         super().__init__(x, y, speed, hunger, hydration, vision)
-
+    # nadpisuje metode draw - zmienia kolor na zielony, ealiacja polimorfizmu
+    def draw(self, surface, grid_size):
+        color = (0,255,0)
+        radius = grid_size // 2
+        center = (self.x * grid_size + radius, self.y * grid_size + radius)
+        pygame.draw.circle(surface, color, center, radius)
+        eye_radius = radius // 5
+        eye_offset_x = radius // 2
+        eye_offset_y = -radius // 3
+        left_eye_center = (center[0] - eye_offset_x, center[1] + eye_offset_y)
+        right_eye_center = (center[0] + eye_offset_x, center[1] + eye_offset_y)
+        pygame.draw.circle(surface, (255, 255, 255), left_eye_center, eye_radius)
+        pygame.draw.circle(surface, (255, 255, 255), right_eye_center, eye_radius)
+        vision_width = self.vision * 2 + 1
+        vision_height = self.vision * 2 + 1
+        top_left_x = (self.x - self.vision) * grid_size
+        top_left_y = (self.y - self.vision) * grid_size
+        pygame.draw.circle(surface, (255, 0, 0), center, self.vision * grid_size, 2)
     def flee_from_predator(self, predators_list, terrains, x_grid_size, y_grid_size):
         closest_predator = None
         min_distance = float('inf')
@@ -201,7 +219,24 @@ class Predator(Animal):
     # inicjalizacja drapieżnika
     def __init__(self, x, y, speed, hunger, hydration, vision):
         super().__init__(x, y, speed, hunger, hydration, vision)
-
+    # nadpisuje metode draw - zmienia kolor na czerwony, ealiacja polimorfizmu
+    def draw(self, surface, grid_size):
+            color = (255,0,0)
+            radius = grid_size // 2
+            center = (self.x * grid_size + radius, self.y * grid_size + radius)
+            pygame.draw.circle(surface, color, center, radius)
+            eye_radius = radius // 5
+            eye_offset_x = radius // 2
+            eye_offset_y = -radius // 3
+            left_eye_center = (center[0] - eye_offset_x, center[1] + eye_offset_y)
+            right_eye_center = (center[0] + eye_offset_x, center[1] + eye_offset_y)
+            pygame.draw.circle(surface, (255, 255, 255), left_eye_center, eye_radius)
+            pygame.draw.circle(surface, (255, 255, 255), right_eye_center, eye_radius)
+            vision_width = self.vision * 2 + 1
+            vision_height = self.vision * 2 + 1
+            top_left_x = (self.x - self.vision) * grid_size
+            top_left_y = (self.y - self.vision) * grid_size
+            pygame.draw.circle(surface, (255, 0, 0), center, self.vision * grid_size, 2)
     def seek_water(self, terrainsWater):
         closest_item = None
         min_distance = float('inf')
