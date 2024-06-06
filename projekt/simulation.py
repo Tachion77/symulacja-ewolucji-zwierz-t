@@ -2,6 +2,7 @@ import pygame
 import random
 from animal import Predator, Prey
 from environment import Water, Grass
+
 class Simulation:
     def __init__(self):
         pygame.init()
@@ -13,8 +14,8 @@ class Simulation:
         self.xGridSize = self.width // self.gridSize
         self.yGridSize = self.height // self.gridSize
 
-        self.predatorsNumber = random.randint(10, 30)
-        self.preysNumber = random.randint(10, 30)
+        self.predatorsNumber = random.randint(10, 15)
+        self.preysNumber = random.randint(10, 15)
         self.terrainNumberWater = random.randint(30, 50)
         self.terrainNumberGrass = random.randint(100, 150)
 
@@ -32,6 +33,18 @@ class Simulation:
 
         self.predators = self.create_predators()
         self.preys = self.create_preys()
+
+        
+        self.background = pygame.Surface((self.width, self.height))
+        self.create_green_background()
+        #Funkcja rysujaca plansze na rozne odcienie zielonego
+    def create_green_background(self):
+        for x in range(self.width):
+            for y in range(self.height):
+                green_value = random.randint(50, 150)
+                color = (0, green_value, 0)
+                self.background.set_at((x, y), color)
+
 
     def create_water_terrains(self):
         terrainsWater = []
@@ -126,7 +139,8 @@ class Simulation:
                     self.pause_resume_simulation()
 
     def update_simulation(self):
-        self.map.fill((0, 0, 0))
+        # Blit the background with varying shades of green
+        self.map.blit(self.background, (0, 0))
 
         # Rysowanie wody
         for water in self.terrainsWater:
@@ -165,7 +179,7 @@ class Simulation:
                         predatortargets[predator] = prey
                         break
             if predator not in predatortargets or predatortargets[predator] not in self.preys:
-                if not predator.seek_energy(self.terrainsGrass, self.terrainsWater):
+                if not predator.seek_water( self.terrainsWater):
                     predator.move_randomly(self.xGridSize, self.yGridSize, self.occupiedWater)
             predator.cooldown()
             predator.draw(self.map, self.gridSize, (255, 0, 0))
@@ -186,6 +200,7 @@ class Simulation:
             self.handle_events()
             if not self.paused:
                 self.update_simulation()
-            self.clock.tick(5)
+            self.clock.tick(9)
             pygame.display.flip()
         pygame.quit()
+
