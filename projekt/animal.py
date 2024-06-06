@@ -115,44 +115,8 @@ class Animal:
                 return True
         return False
 
-    # seek_energy
-    def seek_energy(self, food_list, terrainsWater):
-        closest_item = None
-        min_distance = float('inf')
-        closest_items = []
 
-        if self.hunger < 40 or self.hydration < 40:
-            if self.hunger < self.hydration:
-                item_list = food_list
-            else:
-                item_list = terrainsWater
-        else:
-            return False
 
-        for item in item_list:
-            distance = math.sqrt((self.x - item.x) ** 2 + (self.y - item.y) ** 2)
-            if distance < min_distance and distance <= self.vision:
-                min_distance = distance
-                closest_items = [item]  # Assign closest_items within the loop
-            elif distance == min_distance:
-                closest_items.append(item)
-
-        if closest_items:  # Check if closest_items is not empty
-            closest_item = random.choice(closest_items)
-            if closest_item in food_list:
-                self.move_towards(closest_item.x, closest_item.y, terrainsWater)
-                if (self.x, self.y) == (closest_item.x, closest_item.y):
-                    self.gain_hunger()
-                    food_list.remove(closest_item)
-                    return True
-            elif closest_item in terrainsWater:
-                self.move_towards(closest_item.x, closest_item.y, terrainsWater)
-                distance = math.sqrt((self.x - closest_item.x) ** 2 + (self.y - closest_item.y) ** 2)
-                if distance <= 1:
-                    self.gain_hydration()
-                    return True
-
-            return False
 
 
 # klasa tworząca ofiarę
@@ -190,6 +154,43 @@ class Prey(Animal):
                 else:
                     self.move_randomly(x_grid_size, y_grid_size, [predator.get_position() for predator in predators_list])
 
+    def seek_energy(self, food_list, terrainsWater):
+        closest_item = None
+        min_distance = float('inf')
+        closest_items = []
+
+        if self.hunger < 40 or self.hydration < 40:
+            if self.hunger < self.hydration:
+                item_list = food_list
+            else:
+                item_list = terrainsWater
+        else:
+            return False
+
+        for item in item_list:
+            distance = math.sqrt((self.x - item.x) ** 2 + (self.y - item.y) ** 2)
+            if distance < min_distance and distance <= self.vision:
+                min_distance = distance
+                closest_items = [item]
+            elif distance == min_distance:
+                closest_items.append(item)
+
+        if closest_items:
+            closest_item = random.choice(closest_items)
+            if closest_item in food_list:
+                self.move_towards(closest_item.x, closest_item.y, terrainsWater)
+                if (self.x, self.y) == (closest_item.x, closest_item.y):
+                    self.gain_hunger()
+                    food_list.remove(closest_item)
+                    return True
+            elif closest_item in terrainsWater:
+                self.move_towards(closest_item.x, closest_item.y, terrainsWater)
+                distance = math.sqrt((self.x - closest_item.x) ** 2 + (self.y - closest_item.y) ** 2)
+                if distance <= 1:
+                    self.gain_hydration()
+                    return True
+
+        return False
 
 
 
@@ -200,6 +201,34 @@ class Predator(Animal):
     # inicjalizacja drapieżnika
     def __init__(self, x, y, speed, hunger, hydration, vision):
         super().__init__(x, y, speed, hunger, hydration, vision)
+
+    def seek_water(self, terrainsWater):
+        closest_item = None
+        min_distance = float('inf')
+        closest_items = []
+
+        if self.hydration < 40:
+            item_list = terrainsWater
+        else:
+            return False
+
+        for item in item_list:
+            distance = math.sqrt((self.x - item.x) ** 2 + (self.y - item.y) ** 2)
+            if distance < min_distance and distance <= self.vision:
+                min_distance = distance
+                closest_items = [item]
+            elif distance == min_distance:
+                closest_items.append(item)
+
+        if closest_items:
+            closest_item = random.choice(closest_items)
+            self.move_towards(closest_item.x, closest_item.y, terrainsWater)
+            distance = math.sqrt((self.x - closest_item.x) ** 2 + (self.y - closest_item.y) ** 2)
+            if distance <= 1:
+                self.gain_hydration()
+                return True
+
+        return False
 
     # podążanie za ofiarą
     def follow(self, prey_x, prey_y, terrains):
