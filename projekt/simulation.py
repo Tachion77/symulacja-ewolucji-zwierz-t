@@ -36,7 +36,7 @@ class Simulation:
 
         self.predators = self.create_predators()
         self.preys = self.create_preys()
-
+    # tworyz wodę
     def create_water_terrains(self):
         terrainsWater = []
         for _ in range(self.terrainNumberWater):
@@ -45,7 +45,7 @@ class Simulation:
             size = random.randint(1, 4)
             terrainsWater.append(Water(x, y, size))
         return terrainsWater
-
+    # tworzy trawę
     def create_grass_terrains(self):
         terrainsGrass = []
         for _ in range(self.terrainNumberGrass):
@@ -56,13 +56,13 @@ class Simulation:
                     break
             terrainsGrass.append(Grass(x, y))
         return terrainsGrass
-
+    # zwraca okupowane tereny
     def get_occupied_coordinates(self, terrains):
         occupied = set()
         for terrain in terrains:
             occupied.update(terrain.occupiedCoordinates)
         return occupied
-
+    # tworzy drapieżniki
     def create_predators(self):
         predators = []
         for _ in range(self.predatorsNumber):
@@ -77,7 +77,7 @@ class Simulation:
             vision = 7
             predators.append(Predator(x, y, speed, hunger, hydration, vision))
         return predators
-
+    # tworzy ofiary
     def create_preys(self):
         preys = []
         for _ in range(self.preysNumber):
@@ -172,7 +172,7 @@ class Simulation:
                 if not predator.seek_energy(self.terrainsGrass, self.terrainsWater):
                     predator.move_randomly(self.xGridSize, self.yGridSize, self.occupiedWater)
             predator.cooldown()
-            predator.draw(self.map, self.gridSize, (255, 0, 0))
+            predator.draw(self.map, self.gridSize)
 
         # Aktualizacja ofiar
         for prey in self.preys:
@@ -181,7 +181,7 @@ class Simulation:
             prey.reproduce(self.preys)
             if not prey.seek_energy(self.terrainsGrass, self.terrainsWater):
                 prey.move_randomly(self.xGridSize, self.yGridSize, self.occupiedWater)
-            prey.draw(self.map, self.gridSize, (0, 255, 0))
+            prey.draw(self.map, self.gridSize)
             prey.reproduce(self.preys)
 
     def run(self):

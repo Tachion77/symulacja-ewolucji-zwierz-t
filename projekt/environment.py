@@ -22,7 +22,7 @@ class Water(Terrain):
         for i in range(self.size):
             for j in range(self.size):
                 self.occupiedCoordinates.add((self.x + i, self.y + j))
-# klasa trawy - dziedziczy po terenie
+# klasa trawy
 class Grass:
     def __init__(self,x,y):
         self.x = x

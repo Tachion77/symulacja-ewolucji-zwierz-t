@@ -19,7 +19,8 @@ class Animal:
         self.reproduction_cooldown = 10
 
     # rysowanie zwierzęca
-    def draw(self, surface, grid_size, color):
+    def draw(self, surface, grid_size):
+        color = (255,255,255)
         radius = grid_size // 2
         center = (self.x * grid_size + radius, self.y * grid_size + radius)
         pygame.draw.circle(surface, color, center, radius)
@@ -110,11 +111,11 @@ class Animal:
                 return True
         return False
     
-    # seek_energy
+    # odpowiada za poruszanie się w kierunku pożywienia oraz wody przez zwierzęta
     def seek_energy(self, food_list, terrainsWater):
         closest_item = None
         min_distance = float('inf')
-        closest_items = []  # Initialize closest_items outside the loop
+        closest_items = []
 
         if self.hunger < 40 or self.hydration < 40:
             if self.hunger < self.hydration:
@@ -128,11 +129,11 @@ class Animal:
             distance = math.sqrt((self.x - item.x) ** 2 + (self.y - item.y) ** 2)
             if distance < min_distance and distance <= self.vision:
                 min_distance = distance
-                closest_items = [item]  # Assign closest_items within the loop
+                closest_items = [item]
             elif distance == min_distance:
                 closest_items.append(item)
 
-        if closest_items:  # Check if closest_items is not empty
+        if closest_items:
             closest_item = random.choice(closest_items)
             if closest_item in food_list:
                 self.move_towards(closest_item.x, closest_item.y, terrainsWater)
@@ -154,15 +155,49 @@ class Prey(Animal):
     # inicjalizacja ofiary
     def __init__(self, x, y, speed, hunger, hydration, vision,):
         super().__init__(x, y, speed, hunger, hydration, vision)
-    # reprodukcja
-    def reproduce(self, animals_list):
-        super().reproduce(animals_list)
+    # nadpisuje metode draw - zmienia kolor na zielony, ealiacja polimorfizmu
+    def draw(self, surface, grid_size):
+        color = (0,255,0)
+        radius = grid_size // 2
+        center = (self.x * grid_size + radius, self.y * grid_size + radius)
+        pygame.draw.circle(surface, color, center, radius)
+        eye_radius = radius // 5
+        eye_offset_x = radius // 2
+        eye_offset_y = -radius // 3
+        left_eye_center = (center[0] - eye_offset_x, center[1] + eye_offset_y)
+        right_eye_center = (center[0] + eye_offset_x, center[1] + eye_offset_y)
+        pygame.draw.circle(surface, (255, 255, 255), left_eye_center, eye_radius)
+        pygame.draw.circle(surface, (255, 255, 255), right_eye_center, eye_radius)
+        vision_width = self.vision * 2 + 1
+        vision_height = self.vision * 2 + 1
+        top_left_x = (self.x - self.vision) * grid_size
+        top_left_y = (self.y - self.vision) * grid_size
+        pygame.draw.circle(surface, (255, 0, 0), center, self.vision * grid_size, 2)
+
 
 # klasa tworząca drapieżnika
 class Predator(Animal):
     # inicjalizacja drapieżnika
     def __init__(self, x, y, speed, hunger, hydration, vision):
         super().__init__(x, y, speed, hunger, hydration, vision)
+    # nadpisuje metode draw - zmienia kolor na czerwony, ealiacja polimorfizmu
+    def draw(self, surface, grid_size):
+        color = (255,0,0)
+        radius = grid_size // 2
+        center = (self.x * grid_size + radius, self.y * grid_size + radius)
+        pygame.draw.circle(surface, color, center, radius)
+        eye_radius = radius // 5
+        eye_offset_x = radius // 2
+        eye_offset_y = -radius // 3
+        left_eye_center = (center[0] - eye_offset_x, center[1] + eye_offset_y)
+        right_eye_center = (center[0] + eye_offset_x, center[1] + eye_offset_y)
+        pygame.draw.circle(surface, (255, 255, 255), left_eye_center, eye_radius)
+        pygame.draw.circle(surface, (255, 255, 255), right_eye_center, eye_radius)
+        vision_width = self.vision * 2 + 1
+        vision_height = self.vision * 2 + 1
+        top_left_x = (self.x - self.vision) * grid_size
+        top_left_y = (self.y - self.vision) * grid_size
+        pygame.draw.circle(surface, (255, 0, 0), center, self.vision * grid_size, 2)
     # podążanie za ofiarą
     def follow(self, prey_x, prey_y, terrains):
 
@@ -193,6 +228,3 @@ class Predator(Animal):
                 if not self.is_position_blocked(self.x, next_y, terrains):
                     self.y = next_y
                     break
-    # reprodukcja
-    def reproduce(self, animals_list):
-        super().reproduce(animals_list)
